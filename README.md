@@ -115,13 +115,13 @@ Add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>com.mewebstudio</groupId>
   <artifactId>spring-boot-jpa-translatable-kotlin</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 #### for gradle users
 Add the following dependency to your `build.gradle` file:
 ```groovy
-implementation 'com.mewebstudio:spring-boot-jpa-translatable-kotlin:0.1.0'
+implementation 'com.mewebstudio:spring-boot-jpa-translatable-kotlin:0.1.1'
 ```
 
 ---

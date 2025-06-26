@@ -75,17 +75,6 @@ abstract class AbstractTranslationService<T : ITranslation<ID, OWNER>, ID, OWNER
         repository.findByOwnerIdAndLocale(ownerId, locale)
 
     /**
-     * Finds all translations with a specific name and locale.
-     *
-     * Override this method if the translation entity does not have a 'name' field.
-     *
-     * @param name The name to search for in translations.
-     * @param locale The locale of the translation.
-     * @return List of translations.
-     */
-    open fun findByNameAndLocale(name: String, locale: String): List<T> = repository.findByNameAndLocale(name, locale)
-
-    /**
      * Saves a translation entity.
      *
      * @param translation The translation entity to save.
