@@ -84,16 +84,6 @@ interface JpaTranslationRepository<T : ITranslation<ID, OWNER>, ID, OWNER> : Jpa
     fun findByOwnerIdAndLocale(ownerId: ID, locale: String): T?
 
     /**
-     * Finds all translations with a specific name and locale.
-     *
-     * @param name The name to search for in translations.
-     * @param locale The locale of the translation.
-     * @return List of translations.
-     */
-    @Query("SELECT t FROM #{#entityName} t WHERE t.name = :name AND t.locale = :locale")
-    fun findByNameAndLocale(name: String, locale: String): List<T>
-
-    /**
      * Deletes all translations for a specific locale.
      *
      * @param locale The locale of the translations to delete.
