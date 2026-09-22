@@ -267,7 +267,7 @@ class CategoryService(
 
 - Java 17+
 - Kotlin 1.9.23+
-- Spring Boot 3.x
+- Spring Boot 3.x+
 - Spring Data JPA
 
 ---
