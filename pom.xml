@@ -50,7 +50,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <kotlin.version>1.9.23</kotlin.version>
-        <spring-boot-starter-data-jpa.version>[3.0.11,)</spring-boot-starter-data-jpa.version>
+        <spring-boot-starter-data-jpa.version>3.0.11</spring-boot-starter-data-jpa.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <dokka-maven-plugin.version>2.0.0</dokka-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
