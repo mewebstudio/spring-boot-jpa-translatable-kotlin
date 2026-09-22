@@ -14,10 +14,17 @@ It defines core interfaces, abstract repositories, and a base service class to h
 ```
 com.mewebstudio.springboot.jpa.translatable
 ├── ITranslatable.kt
+├── ITranslatableRef.kt
 ├── ITranslation.kt
+├── ITranslationRef.kt
 ├── JpaTranslatableRepository.kt
+├── JpaTranslatableRefRepository.kt
 ├── JpaTranslationRepository.kt
-└── AbstractTranslatableService.kt
+├── JpaTranslationRefRepository.kt
+├── AbstractTranslatableService.kt
+├── AbstractTranslatableRefService.kt
+├── AbstractTranslationService.kt
+└── AbstractTranslationRefService.kt
 ```
 
 ---
@@ -107,6 +114,59 @@ abstract class AbstractTranslationService<T : ITranslation<ID, OWNER>, ID, OWNER
 
 ---
 
+## 🔗 Ref variant
+
+Every interface/repository/abstract-service above keys a translation row by `locale: String` — the
+FK value *is* the human-readable locale code (`"en"`, `"tr-TR"`, ...) itself. That's fine as long
+as the code never changes after creation. If your `Locale`-like entity's code/name IS editable
+after creation, keying translation rows directly by that mutable string means every rename has to
+cascade across every translation table referencing it.
+
+`ITranslationRef`/`ITranslatableRef`/`JpaTranslationRefRepository`/`JpaTranslatableRefRepository`/
+`AbstractTranslationRefService`/`AbstractTranslatableRefService` are a **fully independent,
+additive** parallel API — identical shape, but the locale is referenced by id (`localeId:
+LOCALE_ID`, typically your locale entity's own, immutable primary key) instead of stored by value
+(`locale: String`) — hence "Ref". Renaming the locale entity's business code then touches nothing
+downstream, since no translation row's FK depends on that value. Pick ONE family per translation
+entity — the two are not meant to be mixed on the same entity. Existing code using the
+`locale: String` family above is completely unaffected by this addition.
+
+```kotlin
+interface ITranslationRef<ID, T, LOCALE_ID> {
+    val id: ID
+    val owner: T
+    val localeId: LOCALE_ID
+}
+```
+
+```kotlin
+@Entity
+class CategoryTranslation(
+    @Id
+    val id: Long,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    override val owner: Category,
+
+    // The real FK — points at Locale.id, never changes even if Locale.code does.
+    @Column(name = "locale_id", nullable = false)
+    override val localeId: Long,
+
+    // Optional: a denormalized, non-FK-constrained display copy of the locale's business code,
+    // refreshed explicitly whenever that code changes — read Locale.code via a join instead if
+    // you don't need it queryable/sortable on the translation row itself.
+    @Column(name = "locale_code", nullable = false)
+    var localeCode: String,
+
+    @Column(name = "name", nullable = false, length = 255)
+    var name: String,
+) : ITranslationRef<Long, Category, Long>
+```
+
+---
+
 ## 📥 Installation
 
 #### for maven users
@@ -115,13 +175,13 @@ Add the following dependency to your `pom.xml` file:
 <dependency>
   <groupId>com.mewebstudio</groupId>
   <artifactId>spring-boot-jpa-translatable-kotlin</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 #### for gradle users
 Add the following dependency to your `build.gradle` file:
 ```groovy
-implementation 'com.mewebstudio:spring-boot-jpa-translatable-kotlin:0.1.1'
+implementation 'com.mewebstudio:spring-boot-jpa-translatable-kotlin:0.1.2'
 ```
 
 ---
@@ -207,7 +267,7 @@ class CategoryService(
 
 - Java 17+
 - Kotlin 1.9.23+
-- Spring Boot 3.x
+- Spring Boot 3.x+
 - Spring Data JPA
 
 ---
