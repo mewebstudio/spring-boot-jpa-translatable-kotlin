@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable
  * @param OWNER The type of the translatable entity that owns the translation.
  * @param repository The JPA repository for the translation entity.
  */
-abstract class AbstractTranslationService<T : ITranslation<ID, OWNER>, ID, OWNER>(
+abstract class AbstractTranslationService<T : ITranslation<ID, OWNER>, ID : Any, OWNER>(
     open val repository: JpaTranslationRepository<T, ID, OWNER>
 ) {
     /**
