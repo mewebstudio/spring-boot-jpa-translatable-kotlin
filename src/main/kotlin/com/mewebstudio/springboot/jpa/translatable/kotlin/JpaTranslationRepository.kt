@@ -15,7 +15,7 @@ import org.springframework.data.repository.NoRepositoryBean
  * @param ID The type of the entity's identifier.
  */
 @NoRepositoryBean
-interface JpaTranslationRepository<T : ITranslation<ID, OWNER>, ID, OWNER> : JpaRepository<T, ID> {
+interface JpaTranslationRepository<T : ITranslation<ID, OWNER>, ID : Any, OWNER> : JpaRepository<T, ID> {
     /**
      * Checks if a translation exists for a specific locale.
      *

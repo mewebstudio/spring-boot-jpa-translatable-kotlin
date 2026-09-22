@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable
  * @param ID The type of the ID of the translatable entity.
  * @property repository The repository for accessing translatable entities.
  */
-abstract class AbstractTranslatableService<T : ITranslatable<ID, TR>, ID, TR : ITranslation<ID, *>>(
+abstract class AbstractTranslatableService<T : ITranslatable<ID, TR>, ID : Any, TR : ITranslation<ID, *>>(
     open val repository: JpaTranslatableRepository<T, ID, TR>
 ) {
     /**

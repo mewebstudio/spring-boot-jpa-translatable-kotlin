@@ -49,7 +49,19 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <!-- Published API target: kotlin-stdlib/kotlin-reflect version AND the emitted metadata's
+             language/api level. Kept at the old floor on purpose so a consumer building with any
+             Kotlin 1.9.0+ compiler can still read this library's jar. -->
         <kotlin.version>1.9.23</kotlin.version>
+        <!-- Compiler used to actually BUILD this module. Must be new enough to read the
+             .kotlin_module metadata embedded in Spring Framework 7/Spring Boot 4's own jars
+             (binary metadata version 2.2.0) - a plain 1.9.23 compiler can't parse that and fails
+             immediately with "incompatible version of Kotlin" the moment spring-boot-starter-data-jpa
+             resolves to any Boot 4.x release (GA or milestone, confirmed on 4.0.0/4.1.1/4.2.0-M1
+             alike - this isn't a milestone-only issue). apiVersion/languageVersion below pin the
+             compiler back down to 1.9 so it still only EMITS 1.9-compatible output despite reading
+             newer input. -->
+        <kotlin.compiler.version>2.2.0</kotlin.compiler.version>
         <spring-boot-starter-data-jpa.version>[3.0.11,)</spring-boot-starter-data-jpa.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <dokka-maven-plugin.version>2.0.0</dokka-maven-plugin.version>
@@ -95,7 +107,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>${kotlin.compiler.version}</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -114,6 +126,8 @@
                 </executions>
                 <configuration>
                     <jvmTarget>17</jvmTarget>
+                    <apiVersion>1.9</apiVersion>
+                    <languageVersion>1.9</languageVersion>
                 </configuration>
             </plugin>
             <plugin>
